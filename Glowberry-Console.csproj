@@ -44,9 +44,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="console\command\ConsoleCommand.cs" />
-        <Compile Include="console\ConsoleCommandExecutor.cs" />
-        <Compile Include="console\ConsoleCommandParser.cs" />
+        <Compile Include="console\CommandHandler.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

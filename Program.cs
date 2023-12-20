@@ -1,6 +1,5 @@
 ﻿using glowberry.common;
 using glowberry.console;
-using glowberry.console.command;
 
 namespace glowberry
 {
@@ -19,7 +18,7 @@ namespace glowberry
             
             // Parses the command line arguments into a ConsoleCommand object and executes it.
             ConsoleCommand command = ConsoleCommandParser.Parse(args);
-            new ConsoleCommandExecutor().ExecuteCommand(command);
+            new CommandHandler().ExecuteCommand(command);
         }
     }
 }

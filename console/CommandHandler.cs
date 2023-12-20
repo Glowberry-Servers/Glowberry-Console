@@ -1,72 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using glowberry.api.server;
-using glowberry.common;
-using glowberry.common.handlers;
-using glowberry.console.command;
-using static glowberry.common.Constants;
 
 namespace glowberry.console
 {
-    /// <summary>
-    /// This class is responsible for taking commands through its methods and executing API calls
-    /// to the backend.
-    ///
-    /// The methods created in here must use the provided API to interact with the backend, and their signature
-    /// must be «public void Command_(Command Name) (ConsoleCommand command)».
-    ///
-    /// To register a command's description and usage, follow the format in the App.config file.
-    /// </summary>
-    public class ConsoleCommandExecutor
+    public class CommandHandler : AbstractConsoleCommandExecutor
     {
         
-        /// <summary>
-        /// The API used to interact with the backend.
-        /// </summary>
-        private ServerAPI API { get; } = new ServerAPI();
-        
-        /// <summary>
-        /// The output handler used to write messages to the console.
-        /// </summary>
-        private MessageProcessingOutputHandler OutputHandler { get; } = new MessageProcessingOutputHandler(Console.Out);
-
-        /// <summary>
-        /// Using reflection, accesses all the methods within this class and tries to run the one matching
-        /// the command name.
-        /// If not found, write the help message.
-        /// </summary>
-        public void ExecuteCommand(ConsoleCommand command)
-        {
-            try
-            {
-                MethodInfo method = this.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                    .FirstOrDefault(m => m.Name.ToLower() == "command_" + command.Command.Replace("-", "_").ToLower());
-                
-                // If the method exists, run it and return.
-                if (method != null)
-                {
-                    method.Invoke(this, new object[] {command});
-                    return;
-                }
-                
-                // If the method does not exist, write the help message.
-                OutputHandler.Write( $@"Command '{command.Command}' not found. Use 'help' for a list of possible commands.");
-            }
-            
-            // If the method throws an exception, try to expose the inner exception.
-            catch (TargetInvocationException e)
-            {
-                if (e.InnerException != null) throw e.InnerException;
-                throw;
-            }
-        }
-
         /// <summary>
         /// Using reflection, accesses all the methods within this class and writes their name, description and usage.
         /// </summary>
@@ -116,9 +61,8 @@ namespace glowberry.console
             
             
             OutputHandler.Write($"Started server '{serverName}'.", Color.Green);
-
-            // TODO: make this work (i want the output on cmd to stop and for the prompt to appear)
-            API.Starter(serverName).Run(OutputHandler); 
+            // API.Starter(serverName).Run(new MessageProcessingOutputHandler(null));
+            Process.Start("cmd.exe");
         }
         
         /// <summary>
@@ -260,5 +204,6 @@ namespace glowberry.console
             string usage = ConfigurationManager.AppSettings.Get("Command_" + commandName + "_Usage");
             OutputHandler.Write($"Unknown command definition. Usage: {usage}");   
         }
+        
     }
 }
