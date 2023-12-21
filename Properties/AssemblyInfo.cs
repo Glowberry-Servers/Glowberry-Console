@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("glowberry")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A console version of Glowberry, for quick and direct access to the managed servers.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("glowberry")]
+[assembly: AssemblyCompany("Glowberry")]
+[assembly: AssemblyProduct("Glowberry Console")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
