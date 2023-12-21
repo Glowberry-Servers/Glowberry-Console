@@ -52,17 +52,10 @@ namespace glowberry.console
                 return;
             }
             
-            // Prevents another instance of the server from being started if it is already running.
-            if (API.Interactions(serverName).IsRunning())
-            {
-                OutputHandler.Write("This server is already running!", Color.Red);
-                return;
-            }
-            
-            
+            if (!this.EnsureServer(serverName, true)) return;
+
             OutputHandler.Write($"Started server '{serverName}'.", Color.Green);
-            // API.Starter(serverName).Run(new MessageProcessingOutputHandler(null));
-            Process.Start("cmd.exe");
+            API.Starter(serverName).Run();
         }
         
         /// <summary>
@@ -98,6 +91,8 @@ namespace glowberry.console
                 return;
             }
             
+            if (!this.EnsureServer(serverName)) return;
+
             // Parses out the message to be sent to the server.
             List<string> messageChunks = command.Arguments.ToList().SkipWhile(x => x != "--message").Skip(1).ToList();
             string message = string.Join(" ", messageChunks);
@@ -121,13 +116,8 @@ namespace glowberry.console
                 return;
             }
             
-            // If the server is not running, then there is no need to stop it.
-            if (!API.Interactions(serverName).IsRunning())
-            {
-                OutputHandler.Write("This server is not running!", Color.Red);
-                return;
-            }
-            
+            if (!this.EnsureServer(serverName)) return;
+
             // Sends the stop command to the server.
             API.Interactions(serverName).WriteToServerStdin("stop");
             OutputHandler.Write($"Stopped server '{serverName}'.", Color.Red);
@@ -147,13 +137,8 @@ namespace glowberry.console
                 return;
             }
             
-            // If the server is not running, then there is no need to stop it.
-            if (!API.Interactions(serverName).IsRunning())
-            {
-                OutputHandler.Write("This server is not running!", Color.Red);
-                return;
-            }
-            
+            if (!this.EnsureServer(serverName)) return;
+
             API.Interactions(serverName).KillServerProcess();
             OutputHandler.Write($"Killed server '{serverName}'.", Color.Red);
         }
@@ -172,13 +157,8 @@ namespace glowberry.console
                 return;
             }
             
-            // If the server is not running, then there is no need to restart it.
-            if (!API.Interactions(serverName).IsRunning())
-            {
-                OutputHandler.Write("This server is not running!", Color.Red);
-                return;
-            }
-            
+            if (!this.EnsureServer(serverName)) return;
+
             // Restarts the server.
             OutputHandler.Write($"Stopping server '{serverName}'.", Color.Yellow);
             API.Interactions(serverName).WriteToServerStdin("stop");
@@ -192,7 +172,36 @@ namespace glowberry.console
             }
             
             OutputHandler.Write($"Starting server '{serverName}'.", Color.Green);
-            API.Starter(serverName).Run(OutputHandler);
+            API.Starter(serverName).Run();
+        }
+
+        /// <summary>
+        /// If the server is not running or doesn't exist, return false with an error message.
+        /// </summary>
+        /// <param name="serverName">The server to check for</param>
+        /// <param name="reverse">If true, then the method will check if the server IS running.</param>
+        private bool EnsureServer(string serverName, bool reverse = false)
+        {
+            // If the server does not exist, then the message cannot be sent.
+            if (!ServerInteractions.GetServerList().Contains(serverName))
+            {
+                OutputHandler.Write($@"Server '{serverName}' does not exist!", Color.Red);
+                return false;
+            }
+            
+            if (!reverse && !API.Interactions(serverName).IsRunning())
+            {
+                OutputHandler.Write("This server is not running!", Color.Red);
+                return false;
+            }
+            
+            if (reverse && API.Interactions(serverName).IsRunning())
+            {
+                OutputHandler.Write("This server is already running!", Color.Red);
+                return false;
+            }
+
+            return true;
         }
         
         /// <summary>

@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <ProjectGuid>{53DB12DC-6672-46CE-A3C7-9A1474B929F2}</ProjectGuid>
         <OutputType>Exe</OutputType>
@@ -34,7 +34,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="GlowberryDLL">
-          <HintPath>..\GlowberryDLL\bin\Debug\GlowberryDLL.dll</HintPath>
+          <HintPath>..\GlowberryDLL\bin\Release\GlowberryDLL.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Configuration" />
